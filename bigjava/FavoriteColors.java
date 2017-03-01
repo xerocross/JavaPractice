@@ -65,17 +65,20 @@ public class FavoriteColors
 	}
 	
 	
-	private void processMainMenuInput(int userArg)
+	private void processMainMenuInput(String userArg)
 	{
-		if (1 == userArg) {
+		if (userArg.equals("data")) {
 			printData();
 			processMainMenuInput(presentMenu());
-		} else if (2 == userArg) 
+		} else if (userArg.equals("new")) 
 		{
 			addNewData();
-		} else if (4 == userArg)
+		} else if (userArg.equals("save"))
 		{
 			save();
+		} else if (userArg.equals("exit"))
+		{
+			return;
 		}
 		processMainMenuInput(presentMenu());
 	}
@@ -91,7 +94,7 @@ public class FavoriteColors
 		} while (keys.contains(name));
 		
 		if (name.equals("menu"))
-			presentMenu();
+			return;
 		
 		System.out.println("Enter the name of a color >");
 		String color = in.nextLine();
@@ -124,22 +127,24 @@ public class FavoriteColors
 	}
 	
 	
-	private int presentMenu()
+	private String presentMenu()
 	{
-		int userArgument = 1;
+		String userArgument = "";
 		while(true)
 		{
 			System.out.println("What would you like to do?");
-			System.out.println("1) display all data entires");
-			System.out.println("2) add new data entry");
+			System.out.println("'data' : display all data entires");
+			System.out.println("'new' :  add new data entry");
+			
 			//System.out.println("3) remove data entry");
 			//System.out.println("4) edit data entry");
-			System.out.println("4) save changes");
+			System.out.println("'save' : save changes");
+			System.out.println("'exit' :  exit the program without saving");
 			//System.out.println("5) exit without saving");
-			System.out.print("Enter a number >");
+			System.out.print("Enter a command >");
 			try
 			{
-				userArgument = in.nextInt();
+				userArgument = in.next();
 				in.nextLine();
 				break;
 			}
