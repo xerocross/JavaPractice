@@ -1,5 +1,7 @@
 package bigjava;
+
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Iterator;
@@ -73,38 +75,56 @@ public class FavoriteColors
 		} else if (userArg.equals("new")) 
 		{
 			addNewData();
-		} else if (userArg.equals("save"))
+		} 
+			else if (userArg.equals("save"))
 		{
 			save();
-		} else if (userArg.equals("exit"))
+		} 
+			else if (userArg.equals("edit"))
+		{
+			edit();
+		} 
+			else if (userArg.equals("exit"))
 		{
 			return;
 		}
 		processMainMenuInput(presentMenu());
 	}
 	
+	
+	private Arrow collectNewData()
+	{
+		System.out.println("Enter a name >");
+		String name = in.nextLine();
+		if (name.equals("menu"))
+			return null;
+		System.out.println("Enter a color >");
+		String color = in.nextLine();
+		return new Arrow(name, color);
+	}
+
 	private void addNewData()
 	{
 		System.out.println("Adding a new data entry...");
+		
 		Set<String> keys = favoriteColors.keySet();
+		Arrow arr;
 		String name;
+		boolean repeating = false;
 		do {
-			System.out.println("Please enter a new unique name.  Or type 'menu' to return to the main menu. >");
-			name = in.nextLine();
-		} while (keys.contains(name));
+			if (repeating)
+				System.out.println("That name is already in use.  Try again...");
+			arr = collectNewData();
+			repeating = true;
+		} while (keys.contains(arr.name));
 		
-		if (name.equals("menu"))
-			return;
-		
-		System.out.println("Enter the name of a color >");
-		String color = in.nextLine();
-		System.out.println("Will add the data (" + name + ", " + color +  ") y/n ");
+		System.out.println("Will add the data (" + arr.name + ", " + arr.color +  ") y/n ");
 		String affirm = in.nextLine();
 		
 		if (affirm.equals("y"))
 		{
 			System.out.println("Adding new data now...");
-			favoriteColors.put(name, color);
+			favoriteColors.put(arr.name, arr.color);
 		}
 		
 	}
@@ -119,11 +139,62 @@ public class FavoriteColors
 		    		writer.println(key+"\t"+favoriteColors.get(key));
 		    }
 		    writer.close();
+		    System.out.println("saved.");
 		} catch (IOException e) {
-		   // do something
+			System.out.println("There was a problem saving...");
 		}
-
 		
+		
+	}
+	
+	private String chooseData()
+	{
+		System.out.println("Choose a data item...");
+		Map<Integer,String> choiceMap = new HashMap<Integer,String>();
+		Set<String> keys = favoriteColors.keySet();
+		int i = 1;
+		for (String key : keys) 
+		{
+			System.out.println(i+") " + key + " : " + favoriteColors.get(key));
+			choiceMap.put(i, key);
+			i++;
+		}
+		int arg;
+		while(true)
+		{
+			try 
+			{
+				System.out.println("Select a data entry by line number. >");
+				arg = in.nextInt();
+				in.nextLine();
+				break;
+			} catch (Exception e) {
+				System.out.println("There was a problem with the input.  Please try again or terminate the program.");
+				continue;
+			}
+		}
+		return choiceMap.get(arg);
+	}
+	
+	
+	private void edit()
+	{
+		String key = chooseData();
+		System.out.println("Now gathering new data to replace this entry...");
+		Arrow arr = collectNewData();
+		System.out.println("Replace the data...");
+		System.out.println(key + " : " + favoriteColors.get(key));
+		System.out.println(arr.name + " : " + arr.color);
+		System.out.println("Confirmed?  y/n");
+		String input = in.nextLine();
+		if (input.equals("y"))
+		{
+			favoriteColors.remove(key);
+			favoriteColors.put(arr.name, arr.color);
+			System.out.println("Edit was made.");
+		} else {
+			System.out.println("No change was made.");
+		}
 	}
 	
 	
@@ -137,7 +208,7 @@ public class FavoriteColors
 			System.out.println("'new' :  add new data entry");
 			
 			//System.out.println("3) remove data entry");
-			//System.out.println("4) edit data entry");
+			System.out.println("'edit' : edit data entry");
 			System.out.println("'save' : save changes");
 			System.out.println("'exit' :  exit the program without saving");
 			//System.out.println("5) exit without saving");
