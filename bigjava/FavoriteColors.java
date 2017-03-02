@@ -6,8 +6,6 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.Iterator;
 import java.io.*;
-import java.awt.Color;
-import java.lang.reflect.Field;
 
 /*
  * This class is an exercise in reading in an
@@ -34,7 +32,6 @@ public class FavoriteColors
 	{
 		favoriteColors = new HashMap<String,String>();
 		in = new Scanner(System.in);
-		
 		try
 		{
 			loadData();
@@ -66,13 +63,12 @@ public class FavoriteColors
 		}
 	}
 	
-	
 	private void processMainMenuInput(String userArg)
 	{
 		if (userArg.equals("data")) {
 			printData();
-			processMainMenuInput(presentMenu());
-		} else if (userArg.equals("new")) 
+		} 
+			else if (userArg.equals("new")) 
 		{
 			addNewData();
 		} 
@@ -91,7 +87,6 @@ public class FavoriteColors
 		processMainMenuInput(presentMenu());
 	}
 	
-	
 	private Arrow collectNewData()
 	{
 		System.out.println("Enter a name >");
@@ -106,10 +101,8 @@ public class FavoriteColors
 	private void addNewData()
 	{
 		System.out.println("Adding a new data entry...");
-		
 		Set<String> keys = favoriteColors.keySet();
 		Arrow arr;
-		String name;
 		boolean repeating = false;
 		do {
 			if (repeating)
@@ -117,16 +110,13 @@ public class FavoriteColors
 			arr = collectNewData();
 			repeating = true;
 		} while (keys.contains(arr.name));
-		
 		System.out.println("Will add the data (" + arr.name + ", " + arr.color +  ") y/n ");
 		String affirm = in.nextLine();
-		
 		if (affirm.equals("y"))
 		{
 			System.out.println("Adding new data now...");
 			favoriteColors.put(arr.name, arr.color);
 		}
-		
 	}
 	
 	private void save()
@@ -143,8 +133,6 @@ public class FavoriteColors
 		} catch (IOException e) {
 			System.out.println("There was a problem saving...");
 		}
-		
-		
 	}
 	
 	private String chooseData()
@@ -176,7 +164,6 @@ public class FavoriteColors
 		return choiceMap.get(arg);
 	}
 	
-	
 	private void edit()
 	{
 		String key = chooseData();
@@ -197,7 +184,6 @@ public class FavoriteColors
 		}
 	}
 	
-	
 	private String presentMenu()
 	{
 		String userArgument = "";
@@ -206,12 +192,9 @@ public class FavoriteColors
 			System.out.println("What would you like to do?");
 			System.out.println("'data' : display all data entires");
 			System.out.println("'new' :  add new data entry");
-			
-			//System.out.println("3) remove data entry");
 			System.out.println("'edit' : edit data entry");
 			System.out.println("'save' : save changes");
 			System.out.println("'exit' :  exit the program without saving");
-			//System.out.println("5) exit without saving");
 			System.out.print("Enter a command >");
 			try
 			{
@@ -238,7 +221,6 @@ public class FavoriteColors
 		Arrow arr = new Arrow(name,color);
 		return arr;
 	}
-	
 	
 	private void loadData() throws FileNotFoundException
 	{
