@@ -2,53 +2,53 @@ package bigjava;
 
 import java.util.*;
 
+/*
+ * This is a simplified, amateur version of a
+ * hash map implemented for practice.  It is
+ * not intended for production use.
+ */
 
-interface Key
-{
-	public boolean equals(Object o);
-}
 
 
-
-class Arrow <U,V>
-{
-	public U key;
-	public V value;
-	
-	public Arrow(U key, V value) 
-	{
-		this.key = key;
-		this.value = value;
-	}
-}
-
-class Node<U,V>
-{
-	public Arrow<U,V> arrow;
-	public Node<U,V> next;
-	public Node(Arrow<U,V> arr, Node<U,V> node)
-	{
-		this.arrow = arr;
-		this.next = node;
-	}
-}
 
 public class SimpleHashMap<U,V>
 {
-
-	
-	private ArrayList<Node<U,V>> buckets;
+	private ArrayList<Node> buckets;
 	private int size;
+	
+	private class Arrow
+	{
+		public U key;
+		public V value;
+		
+		public Arrow(U key, V value) 
+		{
+			this.key = key;
+			this.value = value;
+		}
+	}
+	
+	private class Node
+	{
+		public Arrow arrow;
+		public Node next;
+		public Node previous;
+		public Node(Arrow arr, Node next, Node previous)
+		{
+			this.arrow = arr;
+			this.next = next;
+			this.previous = previous;
+		}
+	}
+	
+
 	
 	public SimpleHashMap(int size)
 	{
 		this.size = size;
-		buckets = new ArrayList<Node<U,V>>(size);
+		buckets = new ArrayList<Node>(size);
 		for (int i = 0; i < size; i++)
 			buckets.add(null);
-		
-		
-		System.out.println("size :" + size + " buckets has been created and the size is " + buckets.size());
 	
 	}
 	
@@ -56,50 +56,113 @@ public class SimpleHashMap<U,V>
 	{
 		if (key == null)
 			return 0;
-		else
+		else 
+		{
 			return key.hashCode();
+		}
 	}
 
+	
+	public int getBucketIndex(U key) {
+		int bucketIndex = hash(key) % size;
+		if (bucketIndex < 0)
+			bucketIndex+=size;
+		return bucketIndex;
+	}
+	
+	private Node getNode(U key) 
+	{
+		int bucketIndex = getBucketIndex(key);
+		Node node = buckets.get(bucketIndex);
+		if (node == null) {
+			return null;
+		} else if (node.arrow.key.equals(key)) {
+			return node;
+		} else {
+			while (node.next != null) 
+			{
+				node = node.next;
+				if (node.arrow.key.equals(key))
+					return node;
+			}
+			return null;
+		}
+	}
+	
+	
+	public void remove (U key)
+	{
+		int bucketIndex = getBucketIndex(key);
+		Node node = getNode(key);
+		Node previous = node.previous;
+		Node next = node.next;
+		if (previous == null)
+			buckets.set(bucketIndex, next);
+		else {
+			previous.next = next;
+		}
+	}
+	
 	public void add(U key, V value)
 	{
-		int hashVal = hash(key);
-		int bucketIndex = hashVal % size;
-		System.out.println("size :" + buckets.size() +" bucketIndex " + bucketIndex);
-		Arrow<U,V> arr = new Arrow<U,V>(key, value);
-		Node<U,V> node = buckets.get(bucketIndex);
-		Node<U,V> newNode = new Node<U,V>(arr, null);
-		if (node == null)
+		int bucketIndex = getBucketIndex(key);
+		Arrow arr = new Arrow(key, value);
+		System.out.println("Adding " + key + " : " + value + " to bucket " + bucketIndex);
+		Node node = buckets.get(bucketIndex);
+		Node newNode = new Node(arr, null,null);
+		if (node == null) {
 			buckets.set(bucketIndex, newNode);
-		else {
-			while (node.next != null) 
+		} else {
+			Node previous;
+			do  
 			{
 				if (node.arrow.key.equals(key)) {
 					System.out.println("key already in use");
 					return;
 				}
+				previous = node;
 				node=node.next;	
-			}
-			
-			node.next = newNode;
+			} while (!(node == null));
+			previous.next = newNode;
+			newNode.previous = previous;
 		}
 	}
 	
+
 	public V get(U key)
 	{
-		int hashValue = hash(key);
-		int bucketIndex = hashValue % size;
-		Node<U,V> node = buckets.get(bucketIndex);
-		if (node == null)
+		int bucketIndex = getBucketIndex(key);
+		Node node = buckets.get(bucketIndex);
+		if (node == null) {
 			return null;
-		else if (node.arrow.key.equals(key))
+		} else if (node.arrow.key.equals(key)) {
 			return node.arrow.value;
-		while (node.next != null) 
-		{
-			if (node.arrow.key.equals(key))
-				return node.arrow.value;
-			node = node.next;
+		} else {
+			while (node.next != null) 
+			{
+				node = node.next;
+				if (node.arrow.key.equals(key))
+					return node.arrow.value;
+			}
 		}
 		return null;
 	}
+	
+	public Set<U> keySet()
+	{
+		int bucketIndex = 0;
+		Set<U> hs = new HashSet<U>();
+		Node node;
+		for (; bucketIndex < size; bucketIndex++)
+		{
+			node = buckets.get(bucketIndex);
+			while (node != null) {
+				hs.add(node.arrow.key);
+				node = node.next;
+			}
+		}
+		return hs;
+	}
+	
 	
 }
