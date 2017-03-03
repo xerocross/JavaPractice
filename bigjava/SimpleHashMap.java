@@ -8,9 +8,6 @@ import java.util.*;
  * not intended for production use.
  */
 
-
-
-
 public class SimpleHashMap<U,V>
 {
 	private ArrayList<Node> buckets;
@@ -41,8 +38,6 @@ public class SimpleHashMap<U,V>
 		}
 	}
 	
-
-	
 	public SimpleHashMap(int size)
 	{
 		this.size = size;
@@ -62,7 +57,6 @@ public class SimpleHashMap<U,V>
 		}
 	}
 
-	
 	public int getBucketIndex(U key) {
 		int bucketIndex = hash(key) % size;
 		if (bucketIndex < 0)
@@ -74,21 +68,13 @@ public class SimpleHashMap<U,V>
 	{
 		int bucketIndex = getBucketIndex(key);
 		Node node = buckets.get(bucketIndex);
-		if (node == null) {
-			return null;
-		} else if (node.arrow.key.equals(key)) {
-			return node;
-		} else {
-			while (node.next != null) 
-			{
-				node = node.next;
-				if (node.arrow.key.equals(key))
-					return node;
-			}
-			return null;
+		while (node != null) {
+			if (node.arrow.key.equals(key))
+				return node;
+			node = node.next;
 		}
+		return null;
 	}
-	
 	
 	public void remove (U key)
 	{
@@ -103,7 +89,7 @@ public class SimpleHashMap<U,V>
 		}
 	}
 	
-	public void add(U key, V value)
+	public void put(U key, V value)
 	{
 		int bucketIndex = getBucketIndex(key);
 		Arrow arr = new Arrow(key, value);
@@ -122,7 +108,7 @@ public class SimpleHashMap<U,V>
 				}
 				previous = node;
 				node=node.next;	
-			} while (!(node == null));
+			} while (node != null);
 			previous.next = newNode;
 			newNode.previous = previous;
 		}
@@ -131,21 +117,11 @@ public class SimpleHashMap<U,V>
 
 	public V get(U key)
 	{
-		int bucketIndex = getBucketIndex(key);
-		Node node = buckets.get(bucketIndex);
-		if (node == null) {
-			return null;
-		} else if (node.arrow.key.equals(key)) {
+		Node node = getNode(key);
+		if (node == null)
+				return null;
+		else
 			return node.arrow.value;
-		} else {
-			while (node.next != null) 
-			{
-				node = node.next;
-				if (node.arrow.key.equals(key))
-					return node.arrow.value;
-			}
-		}
-		return null;
 	}
 	
 	public Set<U> keySet()
