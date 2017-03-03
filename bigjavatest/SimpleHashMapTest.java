@@ -1,15 +1,8 @@
 package bigjavatest;
-
-
 import static org.junit.Assert.*;
-
 import java.util.Set;
-
 import bigjava.SimpleHashMap;
-
 import org.junit.Test;
-
-
 
 public class SimpleHashMapTest {
 
@@ -36,7 +29,6 @@ public class SimpleHashMapTest {
 		assertTrue(hm.get("Adam") == 31); //check that "Adam" was added
 		hm.remove("Adam");
 		assertTrue(hm.get("Adam") == null); //check that "Adam" was removed
-		
 		
 		//case two
 		//bucket contains more than one item, removing the first one
@@ -96,12 +88,10 @@ public class SimpleHashMapTest {
 		assertTrue(keys.contains("Geordi"));
 		assertTrue(keys.contains("Carly"));
 		assertTrue(keys.contains("D"));
-		
 	}
 	
-	
 	@Test
-	public void shouldUseAllBuckets()
+	public void shouldUseAllBucketsUsually()
 	{
 		//this test is not logically required to
 		//pass, but it should usually pass.
