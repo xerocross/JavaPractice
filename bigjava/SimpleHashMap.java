@@ -2,29 +2,31 @@ package bigjava;
 
 import java.util.*;
 
-/*
- * This is a simplified, amateur version of a
- * hash map implemented for practice.  It is
- * not intended for production use.
+/**
+ * SimpleHashMap is a simplified, amateur version of a
+ * hash map. It is not intended for production use.
+ * @author -- Adam Cross
  */
-
 public class SimpleHashMap<U,V>
 {
 	private ArrayList<Node> buckets;
 	private int size;
 	
+	
+
 	private class Arrow
 	{
 		public U key;
 		public V value;
 		
-		public Arrow(U key, V value) 
+		Arrow(U key, V value) 
 		{
 			this.key = key;
 			this.value = value;
 		}
 	}
 	
+
 	private class Node
 	{
 		public Arrow arrow;
@@ -38,6 +40,11 @@ public class SimpleHashMap<U,V>
 		}
 	}
 	
+	/**
+	 * Class constructor.
+	 * @param size the number of buckets in the
+	 * hash map
+	 */
 	public SimpleHashMap(int size)
 	{
 		this.size = size;
@@ -57,7 +64,7 @@ public class SimpleHashMap<U,V>
 		}
 	}
 
-	public int getBucketIndex(U key) {
+	int getBucketIndex(U key) {
 		int bucketIndex = hash(key) % size;
 		if (bucketIndex < 0)
 			bucketIndex+=size;
@@ -76,6 +83,10 @@ public class SimpleHashMap<U,V>
 		return null;
 	}
 	
+	/**
+	 * Removes the data item that matches the specified key.
+	 * @param key the key of the key-value pair to be removed
+	 */
 	public void remove (U key)
 	{
 		int bucketIndex = getBucketIndex(key);
@@ -89,6 +100,11 @@ public class SimpleHashMap<U,V>
 		}
 	}
 	
+	/**
+	 * Assign a key-value pair to the hash map.
+	 * @param key the key in a key-value pair
+	 * @param value the value in a key-value pair
+	 */
 	public void put(U key, V value)
 	{
 		int bucketIndex = getBucketIndex(key);
@@ -114,7 +130,11 @@ public class SimpleHashMap<U,V>
 		}
 	}
 	
-
+	/**
+	 * Get the value associated to a key.
+	 * @param key the key in a key-value pair
+	 * @return the value associated to the key
+	 */
 	public V get(U key)
 	{
 		Node node = getNode(key);
@@ -124,6 +144,10 @@ public class SimpleHashMap<U,V>
 			return node.arrow.value;
 	}
 	
+	/**
+	 * Get a Set collection of all the keys contained in the hash map.
+	 * @return a Set containing all the keys in the hash map
+	 */
 	public Set<U> keySet()
 	{
 		int bucketIndex = 0;

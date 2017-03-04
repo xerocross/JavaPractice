@@ -1,8 +1,9 @@
-package bigjavatest;
+package bigjava;
 import static org.junit.Assert.*;
 import java.util.Set;
-import bigjava.SimpleHashMap;
+
 import org.junit.Test;
+
 
 public class SimpleHashMapTest {
 
@@ -40,6 +41,8 @@ public class SimpleHashMapTest {
 		assertTrue(hm.get("Mahdi")==null);
 		assertTrue(hm.get("Suhail")==18);
 		assertTrue(hm.get("Frank")==12);
+		hm.put("Mahdi", 31);
+		assertTrue(hm.get("Mahdi")==31);
 		
 		//case three
 		//bucket contains three items, removing an interior item
@@ -51,6 +54,8 @@ public class SimpleHashMapTest {
 		assertTrue(hm.get("Suhail")==null);
 		assertTrue(hm.get("Mahdi")==31);
 		assertTrue(hm.get("Frank")==12);
+		hm.put("Suhail", 18);
+		assertTrue(hm.get("Suhail")==18);
 		
 		//case four
 		//bucket contains three items, removing the last one

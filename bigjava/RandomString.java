@@ -1,4 +1,4 @@
-package bigjavatest;
+package bigjava;
 import java.util.Random;
 
 
